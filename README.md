@@ -1,10 +1,7 @@
 ﻿Kethane
 =======
 
-Resource mining and processing plugin for [Kerbal Space Program](http://www.kerbalspaceprogram.com/).
-
-Forum thread: [Kethane Pack](http://forum.kerbalspaceprogram.com/showthread.php/23979-Kethane-Pack)  
-Maintainer: [Majiir](http://forum.kerbalspaceprogram.com/member.php/7556-Majiir)
+With the standard heat management that comes with normal resource harvesters
 
 Building
 --------
