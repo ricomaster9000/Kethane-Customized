@@ -301,5 +301,8 @@
   <ItemGroup>
     <EmbeddedResource Include="Kethane-LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include=".gitignore" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
