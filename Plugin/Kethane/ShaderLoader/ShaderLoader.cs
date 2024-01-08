@@ -9,7 +9,7 @@ using UnityEngine;
 using UnityEngine.Networking;
 using KSPAssets.Loaders;
 
-using KethaneParticles;
+using Kethane.Particles;
 
 namespace Kethane.ShaderLoader
 {

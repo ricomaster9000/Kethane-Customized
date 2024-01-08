@@ -3,9 +3,7 @@ using System.IO;
 using System.Collections.Generic;
 using UnityEngine;
 
-using KethaneParticles;
-
-namespace Kethane
+namespace Kethane.Particles
 {
 
 	public class ParticlePhysics : MonoBehaviour

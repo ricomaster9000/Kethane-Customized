@@ -6,57 +6,65 @@ using UnityEngine;
 
 namespace Kethane
 {
-    public class KethaneController
-    {
-        private static IEnumerable<ResourceDefinition> resourceDefinitions = null;
+	// Token: 0x02000006 RID: 6
+	public class KethaneController
+	{
+		// Token: 0x17000003 RID: 3
+		// (get) Token: 0x06000011 RID: 17 RVA: 0x00002183 File Offset: 0x00000383
+		public static IEnumerable<ResourceDefinition> ResourceDefinitions
+		{
+			get
+			{
+				if (KethaneController.resourceDefinitions == null)
+				{
+					KethaneController.resourceDefinitions = KethaneController.loadResourceDefinitions();
+				}
+				return KethaneController.resourceDefinitions;
+			}
+		}
 
-        public static IEnumerable<ResourceDefinition> ResourceDefinitions
-        {
-            get
-            {
-                if (resourceDefinitions == null)
-                {
-                    resourceDefinitions = loadResourceDefinitions();
-                }
-                return resourceDefinitions;
-            }
-        }
+		// Token: 0x06000012 RID: 18 RVA: 0x0000219C File Offset: 0x0000039C
+		private static IEnumerable<ResourceDefinition> loadResourceDefinitions()
+		{
+			SortedDictionary<string, ResourceDefinition> sortedDictionary = new SortedDictionary<string, ResourceDefinition>();
+			foreach (ResourceDefinition resourceDefinition in from d in GameDatabase.Instance.GetConfigNodes("KethaneResource").Select(new Func<ConfigNode, ResourceDefinition>(KethaneController.TryLoadResourceDefinition))
+			where d != null
+			select d)
+			{
+				if (!PartResourceLibrary.Instance.resourceDefinitions.Contains(resourceDefinition.Resource))
+				{
+					Debug.LogWarning(string.Format("[Kethane] {0} is an unknown resource, ignoring", resourceDefinition.Resource));
+				}
+				else if (sortedDictionary.ContainsKey(resourceDefinition.Resource))
+				{
+					Debug.LogWarning(string.Format("[Kethane] Duplicate definition for {0}, ignoring", resourceDefinition.Resource));
+				}
+				else
+				{
+					sortedDictionary[resourceDefinition.Resource] = resourceDefinition;
+				}
+			}
+			Debug.Log(string.Format("[Kethane] Loaded {0} resource definitions", sortedDictionary.Count));
+			return new ReadOnlyCollection<ResourceDefinition>(sortedDictionary.Values.ToArray<ResourceDefinition>());
+		}
 
-        private static IEnumerable<ResourceDefinition> loadResourceDefinitions()
-        {
-            var defs = new SortedDictionary<String, ResourceDefinition>();
+		// Token: 0x06000013 RID: 19 RVA: 0x000022B0 File Offset: 0x000004B0
+		private static ResourceDefinition TryLoadResourceDefinition(ConfigNode node)
+		{
+			ResourceDefinition result;
+			try
+			{
+				result = new ResourceDefinition(node);
+			}
+			catch (Exception arg)
+			{
+				Debug.LogError(string.Format("[Kethane] Error loading resource definition:\n\n{0}", arg));
+				result = null;
+			}
+			return result;
+		}
 
-            foreach (var definition in GameDatabase.Instance.GetConfigNodes("KethaneResource").Select(TryLoadResourceDefinition).Where(d => d != null))
-            {
-                if (!PartResourceLibrary.Instance.resourceDefinitions.Contains(definition.Resource))
-                {
-                    Debug.LogWarning(String.Format("[Kethane] {0} is an unknown resource, ignoring", definition.Resource));
-                }
-                else if (defs.ContainsKey(definition.Resource))
-                {
-                    Debug.LogWarning(String.Format("[Kethane] Duplicate definition for {0}, ignoring", definition.Resource));
-                }
-                else
-                {
-                    defs[definition.Resource] = definition;   
-                }
-            }
-
-            Debug.Log(String.Format("[Kethane] Loaded {0} resource definitions", defs.Count));
-            return new ReadOnlyCollection<ResourceDefinition>(defs.Values.ToArray());
-        }
-
-        private static ResourceDefinition TryLoadResourceDefinition(ConfigNode node)
-        {
-            try
-            {
-                return new ResourceDefinition(node);
-            }
-            catch (Exception e)
-            {
-                Debug.LogError(String.Format("[Kethane] Error loading resource definition:\n\n{0}", e));
-                return null;
-            }
-        }
-    }
+		// Token: 0x04000004 RID: 4
+		private static IEnumerable<ResourceDefinition> resourceDefinitions;
+	}
 }

@@ -3,7 +3,8 @@ using UnityEngine;
 
 namespace Kethane.PartModules
 {
-    public class KethaneDrillAnimatorLegacy : PartModule, IExtractorAnimator
+	// Token: 0x0200002D RID: 45
+	public class KethaneDrillAnimatorLegacy : PartModule, IExtractorAnimator
     {
         private Transform BaseTransform, Cyl1Transform, Cyl2Transform, Cyl3Transform;
 
