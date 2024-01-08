@@ -118,3 +118,5 @@ Thumbs.db
 /KethaneRelease/
 build_plugin.bat
 combine_files.bat
+
+Plugin/.idea/.idea.Kethane/.idea/

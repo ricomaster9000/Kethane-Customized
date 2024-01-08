@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using KethaneParticles;
+using Kethane.Particles;
 using UnityEngine;
 
 namespace Kethane.ShaderLoader

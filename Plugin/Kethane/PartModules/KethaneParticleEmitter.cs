@@ -1,5 +1,5 @@
 ﻿using System;
-using KethaneParticles;
+using Kethane.Particles;
 using UnityEngine;
 
 namespace Kethane.PartModules

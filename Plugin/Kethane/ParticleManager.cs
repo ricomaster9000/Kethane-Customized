@@ -1,6 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using KethaneParticles;
+﻿using System.Collections.Generic;
+using Kethane.Particles;
 using UnityEngine;
 
 namespace Kethane
