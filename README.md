@@ -1,7 +1,7 @@
 ﻿Kethane-Customized
 =======
 
-(This major modification or rewrite of the mod is for personal use only mainly, I am not planning to puplish it etc. unless I can take out the parts I rewrote and did and publish that as a seperate plugin module or something)
+(This major modification or rewrite of the mod is for personal use only mainly, I am not planning to puplish it etc. unless I can take out the parts I rewrote and did and publish that as a seperate plugin module or something, I like Kethane, it should have been part of the core game for all resource types, its actually a framework for something far more which I am trying to tap into)
 
 With the standard heat management that comes with normal resource harvesters
 
