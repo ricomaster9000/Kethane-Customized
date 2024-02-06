@@ -88,7 +88,6 @@ namespace Kethane.PartModules
 		public override string GetInfo()
 		{
 			return String.Format("Maximum Altitude: {0:N0}m\nPower Consumption: {1:F2}/s\nScanning Period: {2:F2}s\nDetects: {3}", DetectingHeight, PowerConsumption, DetectingPeriod, String.Join(", ", resources.ToArray()));
-
 		}
 
 		// Token: 0x06000125 RID: 293 RVA: 0x00007D9F File Offset: 0x00005F9F

@@ -9,17 +9,13 @@ namespace Kethane.PartModules
 {
     public class ResourceManagementModule : PartModule
     {
-        
-        private List<Resource> resources;
-        
-        [KSPField(guiActive = true, guiActiveEditor = false, guiName = "Resource Management Status")]
-        public string ResourceManagementStatus = "Inactive";
+        [KSPField(guiName = "Resource Management Status", isPersistant = false, guiActive = true)]
+        public string ResourceManagementStatus = "Active";
         
         public override void OnLoad(ConfigNode config)
         {
+            Debug.Log("ResourceManagementModule loaded");
             config = Misc.Parse(config.ToString()).GetNode("MODULE");
-            this.resources = (from n in config.GetNodes("Resource")
-                select new Resource(n)).ToList<Resource>();
         }
 
         public override void OnStart(PartModule.StartState state)
@@ -29,14 +25,22 @@ namespace Kethane.PartModules
                 // Module is always active
                 this.enabled = true;
                 this.part.force_activate();
+                Debug.Log("ResourceManagementModule - Activated");
             }
         }
+        
+        public override string GetInfo()
+        {
+            return String.Format("Manages Resource extraction and resource harvesters. Will disable resource harvesters if no valid or supported resource exists where mining is occuring");
+        }
+
 
         public override void OnFixedUpdate()
         {
             var resourceHarvesters = part.FindModulesImplementing<ModuleResourceHarvester>();
             foreach (var harvester in resourceHarvesters)
             {
+                Debug.Log("ResourceManagementModule - managing resource harvest");
                 ManageResourceHarvester(harvester);
             }
         }
@@ -44,7 +48,7 @@ namespace Kethane.PartModules
         private void ManageResourceHarvester(ModuleResourceHarvester harvester)
         {
             if (harvester == null || !harvester.isEnabled) return;
-
+            
             // Logic to check resource availability and manage harvester
             // For example, deactivate the harvester if resource is not available
             CheckResourceAvailabilityAndDoMining(harvester);
@@ -52,28 +56,23 @@ namespace Kethane.PartModules
 
         private void CheckResourceAvailabilityAndDoMining(ModuleResourceHarvester harvester)
         {
-            foreach (Resource resource in this.resources)
+            IBodyResources bodyResources = this.getBodyResources(harvester.ResourceName);
+            if (bodyResources != null)
             {
-                if (resource.Name == harvester.ResourceName)
+                Cell cellUnder = this.getCellUnder();
+                double? quantity = bodyResources.GetQuantity(cellUnder);
+                if (quantity != null)
                 {
-                    Cell cellUnder = this.getCellUnder();
-                    IBodyResources bodyResources = this.getBodyResources(resource.Name);
-                    if (bodyResources != null)
-                    {
-                        double? quantity = bodyResources.GetQuantity(cellUnder);
-                        if (quantity != null)
-                        {
-                            harvester.EnableModule();
-                            //double num3 = (double)(TimeWarp.fixedDeltaTime * harvester._resFlow);
-                            //num3 = Math.Min(harvester._resFlow, quantity.Value);
-                            bodyResources.Extract(cellUnder, -base.part.RequestResource(resource.Name, -Math.Min(harvester._resFlow, quantity.Value)));
-                        } else {
-                            harvester.DisableModule();
-                        }
-                    } else {
-                        harvester.DisableModule();
-                    }
+                    Debug.Log("ResourceManagementModule - extracting resource " + harvester.ResourceName);
+                    harvester.EnableModule();
+                    //double num3 = (double)(TimeWarp.fixedDeltaTime * harvester._resFlow);
+                    //num3 = Math.Min(harvester._resFlow, quantity.Value);
+                    bodyResources.Extract(cellUnder, -base.part.RequestResource(harvester.ResourceName, -Math.Min(harvester._resFlow, quantity.Value)));
+                } else {
+                    harvester.DisableModule();
                 }
+            } else {
+                harvester.DisableModule();
             }
         }
         
@@ -91,16 +90,5 @@ namespace Kethane.PartModules
             }
             return KethaneData.Current[resourceName][base.vessel.mainBody].Resources;
         }
-        
-        public class Resource
-        {
-            public string Name { get; private set; }
-
-            public Resource(ConfigNode node)
-            {
-                this.Name = node.GetValue("Name");
-            }
-        }
-        
     }
 }
