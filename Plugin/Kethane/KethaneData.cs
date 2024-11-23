@@ -30,6 +30,11 @@ namespace Kethane
 				return this.resources[resourceName];
 			}
 		}
+		
+		public bool resourceExists(string resourceName)
+		{
+			return this.resources.ContainsKey(resourceName);
+		}
 
 		// Token: 0x06000018 RID: 24 RVA: 0x00002309 File Offset: 0x00000509
 		public void ResetGeneratorConfig(ResourceDefinition resource)
